@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+
+Parameters:
+  TableName:
+    Type: String
+    Default: 'TodoListTable'
+    Description: (Required) The name of the new DynamoDB table you want to create and save to. Minimum 3 characters
+    MinLength: 3
+    MaxLength: 50
+    AllowedPattern: ^[A-Za-z]+$
+    ConstraintDescription: 'Required parameter. Must be characters only. No numbers allowed.'
+
+Resources:
+  hello:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handler.hello
+      Runtime: nodejs17.x
+      CodeUri: .
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TableName
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref TableName    
+      Events:
+        CreateAPIPost:   # Event for POST request
+          Type: Api
+          Properties:
+            Path: /hello
+            Method: POST
+        CreateAPIGet:   # Event for GET request
+          Type: Api
+          Properties:
+            Path: /hello
+            Method: GET
+        OtherOperationsAPI:  # Event for other operations
+          Type: Api
+          Properties:
+            Path: /hello/{itemId}
+            Method: ANY
+  DynamoDBTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: !Ref TableName
+      AttributeDefinitions:
+        - AttributeName: itemId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: itemId
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST

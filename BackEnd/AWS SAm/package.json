@@ -1,0 +1,11 @@
+{
+    "name": "sam-work",
+    "version": "1.0.0",
+    "description": "aws cloudformation package --template-file template.yml --s3-bucket <name-of-the-bucket> --output-template-file packaged-template.yaml",
+    "main": "databaseManager.js",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "express": "^4.18.2",
+        "uuid": "^9.0.1"
+    }
+}
